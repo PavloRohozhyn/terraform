@@ -1,4 +1,4 @@
-[Back to list](./../../readme.md)
+[Back to list](./../readme.md)
 
 ## Опис завдання
 
