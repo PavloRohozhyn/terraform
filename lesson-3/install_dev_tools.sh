@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 # ---------------
 # Docker
 # ---------------
@@ -24,10 +25,10 @@ fi
 # ----------------
 # docker-compose
 # ----------------
-if command -v "docker-compose" >/dev/null 2>&1 ; then
-    echo "docker-compose is already installed."
+if command -v "docker compose" >/dev/null 2>&1 ; then
+    echo "docker compose is already installed."
 else
-    echo "docker-compose install process is runs."
+    echo "docker compose install process is runs."
     sudo apt-get install -y docker-compose-plugin
     echo " === docker-compose done. === "
 fi
@@ -41,8 +42,8 @@ if command -v "python3" > /dev/null 2>&1 ; then
         echo "pip3 is already installed"
     else    
         echo "pip3 install process is runs."
-	sudo apt-get install -y python3-pip python3-venv
-	echo " === pip done. ==="
+	    sudo apt-get install -y python3-pip python3-venv
+	    echo " === pip done. ==="
     fi
 else
     if ! command -v "pip3" > /dev/null 2>&1; then
