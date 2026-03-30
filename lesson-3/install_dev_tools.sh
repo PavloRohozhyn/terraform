@@ -23,7 +23,7 @@ else
     echo " === docker done. === "
 fi
 # ----------------
-# docker-compose
+# docker compose
 # ----------------
 if command -v "docker compose" >/dev/null 2>&1 ; then
     echo "docker compose is already installed."
