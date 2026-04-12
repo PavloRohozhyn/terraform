@@ -1,9 +1,11 @@
 terraform {
   backend "s3" {
-    bucket         = "ваше ім'я"
+    bucket         = "test-s3-bucket"
     key            = "lesson-5/terraform.tfstate"
-    region         = "us-west-2"
-    dynamodb_table = "terraform-locks"
+    region         = "us-east-1"
+    # (depricated) dynamodb_table = "terraform-locks"
+    use_lockfile = true 
+    profile        = "default"
     encrypt        = true
   }
 }
