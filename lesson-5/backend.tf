@@ -1,12 +1,16 @@
 terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+
   backend "s3" {
-    bucket         = "test-s3-bucket"
+    bucket         = "rohozhyn-lesson-5"
     key            = "lesson-5/terraform.tfstate"
     region         = "us-east-1"
-    # (depricated) dynamodb_table = "terraform-locks"
-    use_lockfile = true 
-    profile        = "default"
+    dynamodb_table = "terraform-locks"
     encrypt        = true
   }
 }
-
