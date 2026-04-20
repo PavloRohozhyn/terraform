@@ -5,8 +5,9 @@ provider "aws" {
 
 # s3 bucket
 module "s3_backend" {
-  source      = "./modules/s3_backend"
+  source = "./modules/s3_backend"
   bucket_name = "rohozhyn-lesson-5"
+  create_bucket = false # disable create 
   dynamodb_table_name  = "terraform-locks"
   environment = "dev"
 }

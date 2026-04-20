@@ -10,7 +10,7 @@ terraform {
     bucket         = "rohozhyn-lesson-5"
     key            = "lesson-5/terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "terraform-locks"
+    use_lockfile = true
     encrypt        = true
   }
 }
