@@ -1,28 +1,43 @@
-[Back to list](./../readme.md)
+# Завдання до теми 7, Опис завдання
 
-# Опис завдання
+Ваше завдання — створити кластер `Kubernetes` у тій самій мережі (`VPC`), яку ви налаштували в попередньому домашньому завданні, та реалізувати такі компоненти:
 
-Ваше домашнє завдання полягає у створенні `Terraform`-структури для інфраструктури на `AWS` у новій директорії `lesson-5`.
+1. Створення кластера `Kubernetes` через `Terraform`.
 
-Вам потрібно налаштувати:
+2. Налаштування `Elastic Container Registry (ECR)` для зберігання Docker-образу вашого Django-застосунку.
 
-1. Синхронізацію стейт-файлів у `S3` з використанням `DynamoDB` для блокування.
+3. Завантаження `Docker-образу Django` до `ECR`.
 
-2. Мережеву інфраструктуру (`VPC`) з публічними та приватними підмережами.
+4. Створення `helm chart` (`deployment.yaml`, `service.yaml`, `hpa.yaml`, `configmap.yaml`)
 
-3. `ECR (Elastic Container Registry)` для зберігання `Docker`-образів.
+5. Перенесення змінних середовища (`env`) з теми 4 в `ConfigMap`, який буде використаний вашим застосунком.
+
+## Кроки виконання завдання
+
+1. Створіть кластер `Kubernetes`
+
+Використовуючи `Terraform`, створіть кластер `Kubernetes` у вже існуючій мережі (`VPC`).
+Забезпечте доступ до кластера за допомогою `kubectl`. 2. Налаштуйте `ECR`
+
+Використовуючи `Terraform`, створіть репозиторій в `Amazon Elastic Container Registry (ECR)`.
+Завантажте `Docker-образ Django`, який ви створювали в темі 4, до `ECR`, використовуючи `AWS CLI`. 3. Створіть `helm`. У `Helm`-чарті має бути реалізовано:
+
+`Deployment` — з образом `Django` з `ECR` та підключенням `ConfigMap` (через `envFrom`).
+`Service` — типу `LoadBalancer` для зовнішнього доступу.
+`HPA (Horizontal Pod Autoscaler)` — масштабування подів від 2 до 6 при навантаженні > 70%.
+`ConfigMap` — для змінних середовища (перенесених із теми 4).
+`values.yaml` — з параметрами образу, сервісу, конфігурації та autoscaler.
 
 Структура проєкту
 
 ```
-lesson-5/
+lesson-7/
 │
 ├── main.tf                  # Головний файл для підключення модулів
-├── backend.tf               # Налаштування бекенду для стейтів (S3 + DynamoDB)
-├── outputs.tf               # Загальне виведення ресурсів
+├── backend.tf               # Налаштування бекенду для стейтів (S3 + DynamoDB
+├── outputs.tf               # Загальні виводи ресурсів
 │
 ├── modules/                 # Каталог з усіма модулями
-│   │
 │   ├── s3-backend/          # Модуль для S3 та DynamoDB
 │   │   ├── s3.tf            # Створення S3-бакета
 │   │   ├── dynamodb.tf      # Створення DynamoDB
@@ -33,134 +48,24 @@ lesson-5/
 │   │   ├── vpc.tf           # Створення VPC, підмереж, Internet Gateway
 │   │   ├── routes.tf        # Налаштування маршрутизації
 │   │   ├── variables.tf     # Змінні для VPC
-│   │   └── outputs.tf       # Виведення інформації про VPC
+│   │   └── outputs.tf
+│   ├── ecr/                 # Модуль для ECR
+│   │   ├── ecr.tf           # Створення ECR репозиторію
+│   │   ├── variables.tf     # Змінні для ECR
+│   │   └── outputs.tf       # Виведення URL репозиторію
 │   │
-│   └── ecr/                 # Модуль для ECR
-│       ├── ecr.tf           # Створення ECR репозиторію
-│       ├── variables.tf     # Змінні для ECR
-│       └── outputs.tf       # Виведення URL репозиторію ECR
+│   ├── eks/                 # Модуль для Kubernetes кластера
+│   │   ├── eks.tf           # Створення кластера
+│   │   ├── variables.tf     # Змінні для EKS
+│   │   └── outputs.tf       # Виведення інформації про кластер
 │
-└── README.md                # Документація проєкту
-```
-
-# Кроки виконання завдання
-
-## 1. Створіть основну структуру проєкту
-
-У кореневій папці `lesson-5` створіть файли:
-
-`main.tf` — підключення модулів.
-`backend.tf` — налаштування бекенду для збереження стейтів у `S3`.
-`outputs.tf` — загальні вихідні дані з усіх модулів.
-
-## 2. Налаштуйте `S3` для стейтів і `DynamoDB`
-
-У модулі `s3-backend`:
-
-Налаштуйте `S3`-бакет для стейт-файлів `Terraform`.
-Увімкніть версіювання для збереження історії стейтів.
-Налаштуйте таблицю `DynamoDB` для блокування стейтів.
-Виведення має відбуватись у `outputs.tf` URL `S3`-бакета та ім'я `DynamoDB`.
-
-## 3. Побудуйте мережеву інфраструктуру (`VPC`)
-
-У модулі `vpc`:
-
-Створіть `VPC` з `CIDR` блоком.
-Додайте 3 публічні підмережі та 3 приватні підмережі.
-Створіть `Internet Gateway` для публічних підмереж.
-Створіть `NAT Gateway` для приватних підмереж.
-Налаштуйте маршрутизацію через `Route Tables`.
-
-## 4. Створіть репозиторій `ECR`
-
-У модулі `ecr`:
-
-Створіть `ECR`-репозиторій з автоматичним скануванням образів.
-Налаштуйте політику доступу для репозиторію.
-Виведіть `URL` репозиторію через `outputs.tf`.
-
-## 5. Підключіть усі модулі в `main.tf`
-
-#### Підключаємо модуль S3 та DynamoDB
-
-```
-module "s3_backend" {
-  source      = "./modules/s3-backend"
-  bucket_name = "ваше ім'я"
-  table_name  = "terraform-locks"
-}
-```
-
-#### Підключаємо модуль VPC
-
-```
-module "vpc" {
-  source             = "./modules/vpc"
-  vpc_cidr_block     = "10.0.0.0/16"
-  public_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  private_subnets    = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
-  availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"]
-  vpc_name           = "lesson-5-vpc"
-}
-```
-
-#### Підключаємо модуль ECR
-
-```
-module "ecr" {
-  source      = "./modules/ecr"
-  ecr_name    = "lesson-5-ecr"
-  scan_on_push = true
-}
-```
-
-## 6. Налаштуйте бекенд для `Terraform`
-
-Створіть `backend.tf` для налаштування `S3` як бекенду:
-
-```
-terraform {
-  backend "s3" {
-    bucket         = "ваше ім'я"
-    key            = "lesson-5/terraform.tfstate"
-    region         = "us-west-2"
-    dynamodb_table = "terraform-locks"
-    encrypt        = true
-  }
-}
-```
-
-## 7. Зробіть документацію проєкту в README.md
-
-У файлі `README.md` додайте:
-
-Опис структури проєкту.
-Команди для ініціалізації та запуску:
-
-```
-terraform init
-terraform plan
-terraform apply
-terraform destroy
-```
-
-Пояснення кожного модуля: `s3-backend`, `vpc`, `ecr`.
-
-## 8. Завантажте проєкт у репозиторій
-
-1. Створіть нову гілку `lesson-5`.
-
-```
-git checkout -b lesson-5
-
-```
-
-2. Додайте зміни в гілку.
-
-```
-git add .
-git commit -m "Add Terraform modules for S3, VPC, and ECR"
-git push origin lesson-5
-
+├── charts/
+│   └── django-app/
+│       ├── templates/
+│       │   ├── deployment.yaml
+│       │   ├── service.yaml
+│       │   ├── configmap.yaml
+│       │   └── hpa.yaml
+│       ├── Chart.yaml
+│       └── values.yaml     # ConfigMap зі змінними середовища
 ```

@@ -25,8 +25,27 @@ output "private_subnet_ids" {
   value = module.vpc.private_subnet_ids
 }
 
-# ECR module
+# Elastic Container Register
 output "ecr_repository_url" {
   description = "URL of ECR repo"
   value = module.ecr.repository_url
 }
+
+# Kubernetes
+
+output "eks_cluster_endpoint" {
+  description = "kubernetes endpoint"
+  value = module.eks.cluster_endpoint
+}
+
+output "eks_cluster_name" {
+  description = "kubernetes name"
+  value = module.eks.cluster_name
+}
+
+output "eks_cluster_certificate_authority" {
+  description = "kubernetes certificate"
+  value = module.eks.kubeconfig_certificate_authority_data
+  sensitive = true
+}
+
