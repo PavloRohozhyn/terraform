@@ -1,0 +1,30 @@
+replicaCount: 2
+
+image:
+  repository: "211125349493.dkr.ecr.us-east-1.amazonaws.com/dev-lesson-7-test"
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 8000
+
+djangoConfig:
+  DEBUG: "True"
+  ALLOWED_HOSTS: "*"
+  DATABASE_URL: "sqlite:///db.sqlite3"
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
