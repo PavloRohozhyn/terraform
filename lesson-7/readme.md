@@ -39,7 +39,7 @@ Before command `terraform apply` im preparing django application from `lessons 4
 
 ![helm and kubectl version](./imgs/helm-kubectl-version.png)
 
-Next need to prepare docker image for ECR, i take my Django app which i made in lesson 4 and base on this app Im doing image
+Next need to prepare `docker image` for `ECR`, i take my `Django app` which i made in `lesson 4` and base on this app Im doing image
 
 ![django app](./imgs/ls-django-app.png)
 
@@ -66,34 +66,46 @@ terraform apply
 
 ![terraform apply](./imgs/terraform-apply.png)
 
-Uppload docker image (django-app) to ECR
+VPC
 
-## Terraform Apply Result
+![aws vpc](./imgs/aws-vpc.png)
 
-### VPC
+SUBNETS
 
-![vpc](./imgs/vpc.png)
+![aws subnets](./imgs/aws-subnets.png)
 
-### ElasticIP
+APP in ECR
 
-![elastic ip](./imgs/elastic_ip.png)
+![aws ecr](./imgs/aws-ecr.png)
 
-### NAT Gateway
+![aws app](./imgs/aws-app.png)
 
-![nat](./imgs/nat.png)
+EKS
 
-### Elastic Container Service
+now we have `EKS` (eks_cluster_endpoint) and `ECR` (ecr_repositary_url) endpoints
 
-![ecs](./imgs/ecs.png)
+lets upload `docker image` (django-app) to `ECR`, if need do login
 
-### Dynamo DB
+![login upload docker image](./imgs/login-upload-docker-image.png)
 
-![dynamodb](./imgs/dynamodb.png)
+then create tag for docker-image and push to registry
+
+![upload docker image](./imgs/upload-docker-image.png)
+
+lets install app via `helm`
+
+![aws install app helm](./imgs/aws-install-app-helm.png)
+
+and the last its inspect a `aws kubernetes`
+
+![aws inspect kubernetes](./imgs/kubernetes-inspect.png)
+
+!!! DONT FORGET `helm uninstall` firstly
 
 ```
 terraform destroy
 ```
 
-![terraform destroy](./imgs/terraform_destroy.png)
+![terraform destroy](./imgs/terraform-destroy.png)
 
-After this command all data will be deleted `BUT` not S3 bucket, S3 bucket should deleted manually (use AWS web console)
+After this command all data will be deleted `BUT` not `S3 bucket`, `S3` bucket should deleted manually (use `AWS` web console)
