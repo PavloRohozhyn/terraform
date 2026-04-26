@@ -4,10 +4,17 @@ provider "aws" {
 }
 
 # s3 bucket
+
+# aws s3 mb s3://rohozhyn-lesson-7 --region us-east-1
+
 module "s3_backend" {
   source = "./modules/s3_backend"
   bucket_name = "rohozhyn-lesson-7"
-  create_bucket = false # disable create 
+  
+  # on the first time - enabled
+  # on the second and another times - disabled 
+  create_bucket =false 
+
   dynamodb_table_name  = "terraform-locks"
   environment = "dev"
 }

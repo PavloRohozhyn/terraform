@@ -10,15 +10,16 @@
 - ECR (Elastic Container Registry) for Docker-images.
 - Elastic IP (1 item)
 - NAT Gateway (for Internet access from private subnets)
+- EKS (Elastic Kubernetes Service) `new`
 
-Sometimes when S3 doesnt created we can retrieve en error, im use next
-
-```
-aws s3 mb s3://my-uniq-bucket-name
+first off all im creating `S3 bucket`, im use next aws terminal command
 
 ```
+# aws s3 mb s3://rohozhyn-lesson-7 --region us-east-1
 
-![bucket s3](./imgs/bucket_s3.png)
+```
+
+![bucket s3](./imgs/aws-s3.png)
 
 then
 
@@ -26,20 +27,46 @@ then
 terraform init
 ```
 
-![terraform init](./imgs/terraform_init.png)
+![terraform init](./imgs/terraform-init.png)
 
 ```
 terraform plan
 ```
 
-![terraform plan](./imgs/terraform_plan.png)
+![terraform plan](./imgs/terraform-plan.png)
+
+Before command `terraform apply` im preparing django application from `lessons 4`. According to requerements we should use <a href="https://helm.sh/docs/intro/install/" target="_blank">helm</a> and <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/" target="_blank">kubectl</a>
+
+![helm and kubectl version](./imgs/helm-kubectl-version.png)
+
+Next need to prepare docker image for ECR, i take my Django app which i made in lesson 4 and base on this app Im doing image
+
+![django app](./imgs/ls-django-app.png)
+
+run command
+
+```
+docker build -t django-app .
+```
+
+![docker build](./imgs/docker-build.png)
+
+```
+docker images
+```
+
+![docker images](./imgs/docker-images.png)
+
+and now we can continue with terraform
 
 ```
 terraform apply
 
 ```
 
-![terraform apply](./imgs/terraform_apply.png)
+![terraform apply](./imgs/terraform-apply.png)
+
+Uppload docker image (django-app) to ECR
 
 ## Terraform Apply Result
 
