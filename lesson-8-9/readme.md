@@ -10,12 +10,14 @@
 - ECR (Elastic Container Registry) for Docker-images.
 - Elastic IP (1 item)
 - NAT Gateway (for Internet access from private subnets)
-- EKS (Elastic Kubernetes Service) `new`
+- EKS (Elastic Kubernetes Service)
+- `new` Jenkins (for build and push docker container to ECR)
+- `new` ArgoCD (sync cluster-kuber django-app, if git codebase was changed, like new PR in main branch )
 
-first off all im creating `S3 bucket`, im use next aws terminal command
+First off all im creating `S3 bucket`, im use next aws terminal command
 
 ```
-# aws s3 mb s3://rohozhyn-lesson-7 --region us-east-1
+$ aws s3api create-bucket --bucket rohozhyn-lesson-8-9 --region us-east-1
 
 ```
 
@@ -97,6 +99,10 @@ lets install app via `helm`
 ![aws install app helm](./imgs/aws-install-app-helm.png)
 
 and the last its inspect a `aws kubernetes`
+
+```
+aws eks update-kubeconfig --region us-east-1 --name <name-of-cluster> !!!!
+```
 
 ![aws inspect kubernetes](./imgs/kubernetes-inspect.png)
 

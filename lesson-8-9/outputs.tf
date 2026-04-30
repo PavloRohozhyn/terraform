@@ -45,7 +45,17 @@ output "eks_cluster_name" {
 
 output "eks_cluster_certificate_authority" {
   description = "kubernetes certificate"
-  value = module.eks.kubeconfig_certificate_authority_data
+  value = module.eks.cluster_ca_certificate
   sensitive = true
 }
+
+# jenkins
+output "jenkins_release" {
+  value = module.jenkins.jenkins_release_name
+}
+
+output "jenkins_namespace" {
+  value = module.jenkins.jenkins_namespace
+}
+
 

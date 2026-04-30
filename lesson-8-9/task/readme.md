@@ -1,39 +1,37 @@
 [Back to list](./../readme.md)
 
-# Завдання до теми 7, Опис завдання
+# Опис завдання
 
-Ваше завдання — створити кластер `Kubernetes` у тій самій мережі (`VPC`), яку ви налаштували в попередньому домашньому завданні, та реалізувати такі компоненти:
+Ваша мета — реалізувати повний `CI/CD-процес` із використанням `Jenkins` + `Helm` + `Terraform` + `Argo CD`, який:
 
-1. Створення кластера `Kubernetes` через `Terraform`.
+1. Автоматично збирає `Docker-образ` для `Django-застосунку`;
 
-2. Налаштування `Elastic Container Registry (ECR)` для зберігання Docker-образу вашого Django-застосунку.
+2. Публікує образ в `Amazon ECR`;
 
-3. Завантаження `Docker-образу Django` до `ECR`.
+3. Оновлює `Helm chart` у репозиторії з правильним тегом;
 
-4. Створення `helm chart` (`deployment.yaml`, `service.yaml`, `hpa.yaml`, `configmap.yaml`)
+4. Синхронізує застосунок у кластері через `Argo CD`, який підхоплює зміни з `Git`.
 
-5. Перенесення змінних середовища (`env`) з теми 4 в `ConfigMap`, який буде використаний вашим застосунком.
+Кроки виконання завдання
 
-## Кроки виконання завдання
+1. `Jenkins` + `Helm` + `Terraform`
 
-1. Створіть кластер `Kubernetes`
+- Встановіть `Jenkins` через `Helm`, автоматизувавши встановлення через `Terraform`.
+- Забезпечте роботу `Jenkins` через `Kubernetes Agent (Kaniko + Git)`.
+- Реалізуйте `pipeline` (через `Jenkinsfile`), який:
+- Збирає образ із `Dockerfile`;
+- Пушить його до `ECR`;
+- Оновлює тег у `values.yaml` іншого репозиторію;
+- Пушить зміни в `main`. 2. `Argo CD` + `Helm` + `Terraform`
 
-Використовуючи `Terraform`, створіть кластер `Kubernetes` у вже існуючій мережі (`VPC`).
-Забезпечте доступ до кластера за допомогою `kubectl`. 2. Налаштуйте `ECR`
+- Встановіть `Argo CD` через Helm із використанням `Terraform`.
+- Налаштуйте `Argo CD Application`, який стежить за оновленням `Helm-чарта`.
+- `Argo CD` має автоматично синхронізувати зміни у кластері після оновлення `Git`.
 
-Використовуючи `Terraform`, створіть репозиторій в `Amazon Elastic Container Registry (ECR)`.
-Завантажте `Docker-образ Django`, який ви створювали в темі 4, до `ECR`, використовуючи `AWS CLI`. 3. Створіть `helm`. У `Helm`-чарті має бути реалізовано:
-
-`Deployment` — з образом `Django` з `ECR` та підключенням `ConfigMap` (через `envFrom`).
-`Service` — типу `LoadBalancer` для зовнішнього доступу.
-`HPA (Horizontal Pod Autoscaler)` — масштабування подів від 2 до 6 при навантаженні > 70%.
-`ConfigMap` — для змінних середовища (перенесених із теми 4).
-`values.yaml` — з параметрами образу, сервісу, конфігурації та autoscaler.
-
-Структура проєкту
+## Структура проєкту
 
 ```
-lesson-7/
+Progect/
 │
 ├── main.tf                  # Головний файл для підключення модулів
 ├── backend.tf               # Налаштування бекенду для стейтів (S3 + DynamoDB
@@ -56,11 +54,31 @@ lesson-7/
 │   │   ├── variables.tf     # Змінні для ECR
 │   │   └── outputs.tf       # Виведення URL репозиторію
 │   │
-│   ├── eks/                 # Модуль для Kubernetes кластера
-│   │   ├── eks.tf           # Створення кластера
+│   ├── eks/                      # Модуль для Kubernetes кластера
+│   │   ├── eks.tf                # Створення кластера
+│   │   ├── aws_ebs_csi_driver.tf # Встановлення плагіну csi drive
 │   │   ├── variables.tf     # Змінні для EKS
 │   │   └── outputs.tf       # Виведення інформації про кластер
-│
+│   │
+│   ├── jenkins/             # Модуль для Helm-установки Jenkins
+│   │   ├── jenkins.tf       # Helm release для Jenkins
+│   │   ├── variables.tf     # Змінні (ресурси, креденшели, values)
+│   │   ├── providers.tf     # Оголошення провайдерів
+│   │   ├── values.yaml      # Конфігурація jenkins
+│   │   └── outputs.tf       # Виводи (URL, пароль адміністратора)
+│   │
+│   └── argo_cd/             # ✅ Новий модуль для Helm-установки Argo CD
+│       ├── jenkins.tf       # Helm release для Jenkins
+│       ├── variables.tf     # Змінні (версія чарта, namespace, repo URL тощо)
+│       ├── providers.tf     # Kubernetes+Helm.  переносимо з модуля jenkins
+│       ├── values.yaml      # Кастомна конфігурація Argo CD
+│       ├── outputs.tf       # Виводи (hostname, initial admin password)
+│		    └──charts/                  # Helm-чарт для створення app'ів
+│ 	 	    ├── Chart.yaml
+│	  	    ├── values.yaml          # Список applications, repositories
+│			    └── templates/
+│		        ├── application.yaml
+│		        └── repository.yaml
 ├── charts/
 │   └── django-app/
 │       ├── templates/
