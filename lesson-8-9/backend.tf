@@ -7,7 +7,7 @@ terraform {
   }
 
 
-  # aws s3 mb s3://rohozhyn-lesson-7 --region us-east-1
+  # aws s3 mb s3://rohozhyn-lesson-8-9 --region us-east-1
 
   backend "s3" {
     bucket = "rohozhyn-lesson-8-9"

@@ -6,7 +6,7 @@ resource "aws_iam_role" "cluster_role" {
     Statement = [{
       Action = "sts:AssumeRole"
       Effect = "Allow"
-      Principal = { Service = "://amazonaws.com" }
+      Principal = { Service = "eks.amazonaws.com" }
     }]
   })
 }
@@ -24,7 +24,7 @@ resource "aws_iam_role" "node_role" {
     Statement = [{
       Action = "sts:AssumeRole"
       Effect = "Allow"
-      Principal = { Service = "://amazonaws.com" }
+      Principal = { Service = "ec2.amazonaws.com" }
     }]
   })
 }
@@ -87,7 +87,7 @@ data "tls_certificate" "eks" {
 }
 
 resource "aws_iam_openid_connect_provider" "oidc" {
-  client_id_list  = ["://amazonaws.com"]
+  client_id_list  = ["sts.amazonaws.com"]
   thumbprint_list = [data.tls_certificate.eks.certificates[0].sha1_fingerprint]
   url             = aws_eks_cluster.this.identity[0].oidc[0].issuer
 }
@@ -120,4 +120,27 @@ resource "aws_eks_addon" "ebs_csi" {
   cluster_name             = aws_eks_cluster.this.name
   addon_name               = "aws-ebs-csi-driver"
   service_account_role_arn = aws_iam_role.ebs_csi_role.arn
+}
+
+
+resource "aws_iam_role_policy_attachment" "eks_node_ebs_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+  role       = aws_iam_role.node_role.name
+}
+
+
+resource "kubernetes_storage_class_v1" "ebs_sc" {
+  metadata {
+    name = "ebs-sc"
+    annotations = {
+      "storageclass.kubernetes.io/is-default-class" = "true"
+    }
+  }
+  storage_provisioner    = "ebs.csi.aws.com"
+  reclaim_policy         = "Retain"
+  volume_binding_mode    = "WaitForFirstConsumer"
+  allow_volume_expansion = true
+  parameters = {
+    type = "gp3"
+  }
 }

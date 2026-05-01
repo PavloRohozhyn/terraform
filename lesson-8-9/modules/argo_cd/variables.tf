@@ -4,13 +4,13 @@ variable "argo_cd_namespace" {
   default = "argocd"
 }
 
-variable "chart_version" {
-  description = "The version of the Argo CD"
-  type = string
-  default = "5.5.0"
-}
-
 variable "repo_url" {
   description = "ArgoCD for monitoring"
   type = string
+}
+
+variable "chart_version" {
+  description = "Version of the Argo CD helm chart"
+  type        = string
+  default     = "7.7.0"
 }

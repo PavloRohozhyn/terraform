@@ -37,29 +37,7 @@ terraform plan
 
 ![terraform plan](./imgs/terraform-plan.png)
 
-Before command `terraform apply` im preparing django application from `lessons 4`. According to requerements we should use <a href="https://helm.sh/docs/intro/install/" target="_blank">helm</a> and <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/" target="_blank">kubectl</a>
-
-![helm and kubectl version](./imgs/helm-kubectl-version.png)
-
-Next need to prepare `docker image` for `ECR`, i take my `Django app` which i made in `lesson 4` and base on this app Im doing image
-
-![django app](./imgs/ls-django-app.png)
-
-run command
-
-```
-docker build -t django-app .
-```
-
-![docker build](./imgs/docker-build.png)
-
-```
-docker images
-```
-
-![docker images](./imgs/docker-images.png)
-
-and now we can continue with terraform
+Before command `terraform apply` im preparing django application from `lessons 4`. Im create independent repo with django application (<a href="https://github.com/PavloRohozhyn/django-app-for-terraform.git">django-app-for-terraform</a>) and create there Jenkinsfile for CI/CD process
 
 ```
 terraform apply
@@ -67,6 +45,13 @@ terraform apply
 ```
 
 ![terraform apply](./imgs/terraform-apply.png)
+
+
+And NOW! lets check what was created ))), firstly update kuberconfig because we have a new kubernetes cluster
+
+```
+aws eks update-kubeconfig --name dev-lesson-8-9-test-kuber
+```
 
 VPC
 
@@ -80,31 +65,14 @@ APP in ECR
 
 ![aws ecr](./imgs/aws-ecr.png)
 
-![aws app](./imgs/aws-app.png)
-
 EKS
 
-now we have `EKS` (eks_cluster_endpoint) and `ECR` (ecr_repositary_url) endpoints
+![aws kubernetes list](./imgs/kubernetes-1.png)
 
-lets upload `docker image` (django-app) to `ECR`, if need do login
+![aws kubernetes spec](./imgs/kubernetes-2.png)
 
-![login upload docker image](./imgs/login-upload-docker-image.png)
 
-then create tag for docker-image and push to registry
 
-![upload docker image](./imgs/upload-docker-image.png)
-
-lets install app via `helm`
-
-![aws install app helm](./imgs/aws-install-app-helm.png)
-
-and the last its inspect a `aws kubernetes`
-
-```
-aws eks update-kubeconfig --region us-east-1 --name <name-of-cluster> !!!!
-```
-
-![aws inspect kubernetes](./imgs/kubernetes-inspect.png)
 
 !!! DONT FORGET `helm uninstall` firstly
 
