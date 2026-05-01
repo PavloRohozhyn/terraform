@@ -6,20 +6,18 @@ resource "kubernetes_namespace" "jenkins" {
 
 resource "kubernetes_service_account_v1" "jenkins" {
   metadata {
-    name      = "jenkins-admin"
+    name = "jenkins-admin"
     namespace = "jenkins" # Переконайтеся, що цей namespace вже існує або створюється раніше
     annotations = {
       "eks.amazonaws.com/role-arn" = aws_iam_role.jenkins_ecr_role.arn
     }
   }
-
   depends_on = [kubernetes_namespace.jenkins]
 }
 
-# 2. IAM роль для Jenkins
+# IAM for Jenkins
 resource "aws_iam_role" "jenkins_ecr_role" {
   name = "${var.environment}-jenkins-ecr-role"
-
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -39,24 +37,22 @@ resource "aws_iam_role" "jenkins_ecr_role" {
 
 resource "aws_iam_role_policy_attachment" "jenkins_ecr_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
-  role       = aws_iam_role.jenkins_ecr_role.name
+  role = aws_iam_role.jenkins_ecr_role.name
 }
 
-# 3. Встановлюємо Jenkins
+# Jenkins
 resource "helm_release" "jenkins" {
-  name             = "jenkins"
-  repository       = "https://charts.jenkins.io"
-  chart            = "jenkins"
-  namespace  = kubernetes_namespace.jenkins.metadata[0].name
+  name = "jenkins"
+  repository = "https://charts.jenkins.io"
+  chart = "jenkins"
+  namespace = kubernetes_namespace.jenkins.metadata[0].name
   create_namespace = false
-
-
-  force_update    = true
-  recreate_pods   = true
+  force_update = true
+  recreate_pods = true
   cleanup_on_fail = true
   replace = true 
   timeout = 900
-  wait    = true
+  wait = true
 
   values = [
     file("${path.module}/values.yaml")
@@ -78,9 +74,8 @@ resource "helm_release" "jenkins" {
 
 data "kubernetes_service_v1" "jenkins_svc" {
   metadata {
-    name      = "jenkins" 
+    name = "jenkins" 
     namespace = "jenkins"
   }
-
   depends_on = [helm_release.jenkins]
 }

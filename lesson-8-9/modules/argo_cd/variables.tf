@@ -11,6 +11,6 @@ variable "repo_url" {
 
 variable "chart_version" {
   description = "Version of the Argo CD helm chart"
-  type        = string
-  default     = "7.7.0"
+  type = string
+  default = "7.7.0"
 }

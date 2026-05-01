@@ -34,6 +34,5 @@ variable "storage_class" {
 }
 variable "kubeconfig" {
   description = "path to kuberconfig file"
-  type        = string
+  type = string
 }
-

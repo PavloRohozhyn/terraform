@@ -3,7 +3,6 @@ kind: Job
 metadata:
   name: "{{ .Release.Name }}-migration-{{ .Release.Revision }}"
   annotations:
-    # Це змушує Helm запустити Job перед встановленням/оновленням основного застосунку
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "1"
     "helm.sh/hook-delete-policy": before-hook-creation
