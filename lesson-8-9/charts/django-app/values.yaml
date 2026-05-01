@@ -1,8 +1,8 @@
 replicaCount: 2
 
 image:
-  repository: "211125349493.dkr.ecr.us-east-1.amazonaws.com/dev-lesson-7-test"
-  tag: "latest"
+  repository: ""
+  tag: "8"
   pullPolicy: IfNotPresent
 
 service:

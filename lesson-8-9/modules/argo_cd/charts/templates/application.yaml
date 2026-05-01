@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: django-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: {{ .Values.repoURL | quote }}
+    targetRevision: "lesson-8-9" # branch terraform repo
+    path: {{ .Values.appPath | quote }}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: {{ .Values.namespace | default "default" }}  # if dev ns not created we use default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -28,3 +28,6 @@ terraform.rc
 
 # Ignore plan files (typically contain sensitive secrets in plain text)
 *tfplan*
+
+# secrets
+terraform.tfvars

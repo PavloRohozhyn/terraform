@@ -7,13 +7,13 @@ variable "environment" {
 variable "cluster_name" {
   description = "kubernetes name"
   type = string
-  default = "lesson-7-eks-cluster"
+  default = "dev-lesson-8-9-test-kuber"
 }
 
 variable "cluster_version" {
   description = "version of kubernetes"
   type = string
-  default = "1.30"
+  default = "1.35"
 }
 
 variable "vpc_id" {
