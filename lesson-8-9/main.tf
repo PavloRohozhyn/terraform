@@ -50,7 +50,7 @@ module "eks" {
   environment = "dev"
   cluster_name = "lesson-8-9-test-kuber"
   vpc_id = module.vpc.vpc_id
-  private_subnet_ids = module.vpc.private_subnet_ids 
+  private_subnet_ids = module.vpc.private_subnet_ids
 }
 
 

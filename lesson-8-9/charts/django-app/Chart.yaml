@@ -1,3 +1,5 @@
+# here (this charts ./charts/django-app/Chart.yaml) we describe Django application
+# how Django works into Kubernetes
 apiVersion: v2
 name: django-app
 description: Django application
