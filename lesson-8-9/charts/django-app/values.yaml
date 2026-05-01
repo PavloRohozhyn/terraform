@@ -12,9 +12,9 @@ service:
 
 djangoConfig:
   ALLOWED_HOSTS: "*"
-  DATABASE_URL: "sqlite:///db.sqlite3"
+  DATABASE_URL: "sqlite:////db.sqlite3"
   DEBUG: "True"
-  DJANGO_SETTINGS_MODULE: "app.app.settings"
+  DJANGO_SETTINGS_MODULE: "config.settings"
   PYTHONPATH: "/app"
 
 autoscaling:
