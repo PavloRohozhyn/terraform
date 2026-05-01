@@ -11,9 +11,10 @@ service:
   targetPort: 8000
 
 djangoConfig:
-  DEBUG: "True"
   ALLOWED_HOSTS: "*"
   DATABASE_URL: "sqlite:///db.sqlite3"
+  DEBUG: "True"
+  DJANGO_SETTINGS_MODULE: "app.app.settings"
 
 autoscaling:
   enabled: true
