@@ -63,18 +63,34 @@ SUBNETS
 
 APP in ECR
 
-![aws ecr](./imgs/aws-ecr.png)
+![aws ecr list](./imgs/aws-ecr-list.png)
 
-EKS
+EKS (this screen is old and was made several days ago,  in reals im instaled 1.35 )
 
 ![aws kubernetes list](./imgs/kubernetes-1.png)
 
 ![aws kubernetes spec](./imgs/kubernetes-2.png)
 
+then i spend a lot of time to config `jenkins` and `argo` connect from `external ip` and im made port forvarding for fast (temperary) design 
 
 
+![port forward jenkins](./imgs/port-forward-jenkins.png)
 
-!!! DONT FORGET `helm uninstall` firstly
+
+![port forward argo](./imgs/port-forward-argo.png)
+
+and now we have access to `jenkins` with defult jobs (were trouble with docker container and 12-th release was without errors)
+
+![aws jenkins](./imgs/aws-jenkins.png)
+
+and `argocd` with kubernetis maps
+
+![aws argo](./imgs/aws-argo.png)
+
+and `django app` on public DNS (only `http`)
+
+![aws app](./imgs/aws-app.png)
+
 
 ```
 terraform destroy
@@ -83,3 +99,8 @@ terraform destroy
 ![terraform destroy](./imgs/terraform-destroy.png)
 
 After this command all data will be deleted `BUT` not `S3 bucket`, `S3` bucket should deleted manually (use `AWS` web console)
+
+
+BUDGET ))) 
+
+![aws budget](./imgs/aws-budget.png)
