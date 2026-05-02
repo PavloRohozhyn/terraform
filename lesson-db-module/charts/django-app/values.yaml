@@ -1,0 +1,32 @@
+replicaCount: 2
+
+image:
+  repository: ""
+  tag: "12"
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 8000
+
+djangoConfig:
+  ALLOWED_HOSTS: "*"
+  DATABASE_URL: "sqlite:////db.sqlite3"
+  DEBUG: "True"
+  DJANGO_SETTINGS_MODULE: "config.settings"
+  PYTHONPATH: "/app"
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"

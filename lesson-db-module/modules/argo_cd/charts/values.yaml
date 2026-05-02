@@ -1,0 +1,4 @@
+appPath: "lesson-8-9/charts/django-app"
+repoURL: "https://github.com/PavloRohozhyn/terraform.git"
+targetRevision: "lesson-8-9"
+namespace: "default"
