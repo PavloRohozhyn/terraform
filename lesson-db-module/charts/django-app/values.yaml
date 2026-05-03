@@ -1,8 +1,8 @@
 replicaCount: 1
 
 image:
-  repository: ""
-  tag: "12"
+  repository: 211125348493.dkr.ecr.us-east-1.amazonaws.com/dev-lesson-db-module-test
+  tag: "latest"
   pullPolicy: IfNotPresent
 
 service:

@@ -51,7 +51,7 @@ terraform apply
 And NOW! lets check what was created ))), firstly update kuberconfig because we have a new kubernetes cluster
 
 ```
-aws eks update-kubeconfig --name dev-lesson-db-module-test-kuber
+$ aws eks update-kubeconfig --name dev-lesson-db-module-test-kuber
 ```
 
 ### Функціонал модуля:
