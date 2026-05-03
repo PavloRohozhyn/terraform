@@ -1,0 +1,36 @@
+replicaCount: 1
+
+image:
+  repository: 211125349493.dkr.ecr.us-east-1.amazonaws.com/dev-lesson-db-module-test
+  tag: "6"
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 8000
+
+djangoConfig:
+  ALLOWED_HOSTS: "*"
+  # DATABASE_URL: "sqlite:////db.sqlite3"
+  DB_ENGINE: "django.db.backends.postgresql"
+  DB_NAME: "tododb"
+  DB_USER: "admin"
+  DB_PORT: "5432"
+  DEBUG: "True"
+  DJANGO_SETTINGS_MODULE: "config.settings"
+  PYTHONPATH: "/app"
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"

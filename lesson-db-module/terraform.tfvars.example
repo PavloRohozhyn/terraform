@@ -1,0 +1,2 @@
+github_token = "" # yours GitHub PAT token (classic)
+db_name="" # rds database name (tododb)
