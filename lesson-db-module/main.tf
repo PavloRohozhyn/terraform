@@ -3,7 +3,6 @@ provider "aws" {
   region = "us-east-1"
 }
 
-
 # kubernetes
 provider "kubernetes" {
   host = module.eks.cluster_endpoint
@@ -90,7 +89,7 @@ module "argo_cd" {
 # rds
 module "rds" {
   source = "./modules/rds"
-  name = "todo-db"
+  name = "tododb"
   use_aurora = false  # aurora cluster (when true)
   # --- RDS Only ---
   engine = "postgres"
@@ -99,7 +98,7 @@ module "rds" {
   # Common
   instance_class = "db.t3.micro"
   allocated_storage = 20
-  db_name = "todo"
+  db_name = var.db_name
   username = "postgres"
   password = "admin123"
   subnet_private_ids = module.vpc.private_subnet_ids
@@ -115,6 +114,6 @@ module "rds" {
   }
   tags = {
     Environment = "dev"
-    Project = "todo-db"
+    Project = "tododb"
   }
 }

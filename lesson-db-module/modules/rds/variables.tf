@@ -1,7 +1,7 @@
 variable "name" {
   description = "name of instance or cluster"
   type = string
-  default = "todo-db"
+  default = "tododb"
 }
 variable "engine" {
   type = string
@@ -33,6 +33,7 @@ variable "allocated_storage" {
 }
 variable "db_name" {
   type = string
+  default = "tododb"
 }
 variable "username" {
   type = string

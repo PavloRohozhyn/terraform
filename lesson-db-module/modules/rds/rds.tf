@@ -15,10 +15,15 @@ resource "aws_db_instance" "this" {
   vpc_security_group_ids = [aws_security_group.this.id]
   
   multi_az = var.multi_az
-  publicly_accessible = var.publicly_accessible
+  # publicly_accessible = var.publicly_accessible
+  publicly_accessible = true
   backup_retention_period = var.backup_retention_period
   
   parameter_group_name = aws_db_parameter_group.this[0].name
+
+  skip_final_snapshot     = true
+  deletion_protection     = false
+  final_snapshot_identifier = false
 
   tags = var.tags
 }

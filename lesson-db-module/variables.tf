@@ -3,3 +3,8 @@ variable "github_token" {
   type = string
   sensitive = true # hide pass in log (****) 
 }
+
+variable "db_name" {
+  description = "The name of the database to create in RDS"
+  type        = string
+}
