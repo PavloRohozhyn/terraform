@@ -7,7 +7,7 @@ variable "environment" {
 variable "cluster_name" {
   description = "kubernetes name"
   type = string
-  default = "dev-lesson-8-9-test-kuber"
+  default = "dev-lesson-db-module-test-kuber"
 }
 
 variable "cluster_version" {
