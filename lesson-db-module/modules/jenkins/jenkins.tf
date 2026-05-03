@@ -1,4 +1,4 @@
-resource "kubernetes_namespace" "jenkins" {
+resource "kubernetes_namespace_v1" "jenkins" {
   metadata {
     name = "jenkins"
   }
@@ -7,12 +7,12 @@ resource "kubernetes_namespace" "jenkins" {
 resource "kubernetes_service_account_v1" "jenkins" {
   metadata {
     name = "jenkins-admin"
-    namespace = "jenkins" # Переконайтеся, що цей namespace вже існує або створюється раніше
+    namespace = "jenkins"
     annotations = {
       "eks.amazonaws.com/role-arn" = aws_iam_role.jenkins_ecr_role.arn
     }
   }
-  depends_on = [kubernetes_namespace.jenkins]
+  depends_on = [kubernetes_namespace_v1.jenkins]
 }
 
 # IAM for Jenkins
@@ -45,7 +45,7 @@ resource "helm_release" "jenkins" {
   name = "jenkins"
   repository = "https://charts.jenkins.io"
   chart = "jenkins"
-  namespace = kubernetes_namespace.jenkins.metadata[0].name
+  namespace = kubernetes_namespace_v1.jenkins.metadata[0].name
   create_namespace = false
   force_update = true
   recreate_pods = true
@@ -60,11 +60,11 @@ resource "helm_release" "jenkins" {
 
   set = [
     {
-      name  = "controller.serviceAccount.create"
+      name = "controller.serviceAccount.create"
       value = "false" # Ми вже створили SA вище через kubernetes_service_account_v1
     },
     {
-      name  = "controller.serviceAccount.name"
+      name = "controller.serviceAccount.name"
       value = kubernetes_service_account_v1.jenkins.metadata[0].name
     }
   ]

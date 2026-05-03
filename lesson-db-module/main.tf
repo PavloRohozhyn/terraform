@@ -3,6 +3,7 @@ provider "aws" {
   region = "us-east-1"
 }
 
+
 # kubernetes
 provider "kubernetes" {
   host = module.eks.cluster_endpoint
@@ -30,7 +31,7 @@ provider "helm" {
 # s3 bucket
 module "s3_backend" {
   source = "./modules/s3_backend"
-  bucket_name = "rohozhyn-lesson-8-9"
+  bucket_name = "rohozhyn-lesson-db-lessons"
   create_bucket = false 
   dynamodb_table_name = "terraform-locks"
   environment = "dev"
@@ -50,7 +51,7 @@ module "vpc" {
 module "ecr" {
   source = "./modules/ecr"
   environment = "dev"
-  repository_name = "lesson-8-9-test"
+  repository_name = "lesson-db-module-test"
   scan_on_push = true
 }
 
@@ -58,7 +59,7 @@ module "ecr" {
 module "eks" {
   source = "./modules/eks"
   environment = "dev"
-  cluster_name = "lesson-8-9-test-kuber"
+  cluster_name = "lesson-db-module-test-kuber"
   vpc_id = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnet_ids
 }
@@ -84,4 +85,36 @@ module "argo_cd" {
   chart_version = "5.46.4"
   repo_url = "https://github.com/PavloRohozhyn/terraform.git" 
   depends_on = [module.eks] 
+}
+
+# rds
+module "rds" {
+  source = "./modules/rds"
+  name = "todo-db"
+  use_aurora = false  # aurora cluster (when true)
+  # --- RDS Only ---
+  engine = "postgres"
+  engine_version = "17.2"
+  parameter_group_family_rds = "postgres17"
+  # Common
+  instance_class = "db.t3.micro"
+  allocated_storage = 20
+  db_name = "todo"
+  username = "postgres"
+  password = "admin123"
+  subnet_private_ids = module.vpc.private_subnet_ids
+  subnet_public_ids = module.vpc.public_subnet_ids
+  vpc_id = module.vpc.vpc_id
+  publicly_accessible = false
+  multi_az = false
+  backup_retention_period = 7
+  
+  parameters = {
+    max_connections = "200"
+    log_min_duration_statement = "500"
+  }
+  tags = {
+    Environment = "dev"
+    Project = "todo-db"
+  }
 }

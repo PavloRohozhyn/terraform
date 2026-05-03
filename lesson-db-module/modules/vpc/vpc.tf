@@ -1,3 +1,4 @@
+# --------------------- main vpc ------------------
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
@@ -30,6 +31,8 @@ resource "aws_subnet" "private" {
     Environment = var.environment
   }
 }
+# ------------------ end main -------------------
+
 # Internet Gateway
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
@@ -38,14 +41,7 @@ resource "aws_internet_gateway" "main" {
     Environment = var.environment
   }
 }
-# Elastic IP for NAT Gateway
-resource "aws_eip" "nat" {
-  domain = "vpc"
-  tags = {
-    Name = "${var.environment}-nat-eip"
-    Environment = var.environment
-  }
-}
+
 # NAT Gateway
 resource "aws_nat_gateway" "main" {
   allocation_id = aws_eip.nat.id
@@ -55,4 +51,13 @@ resource "aws_nat_gateway" "main" {
     Environment = var.environment
   }
   depends_on = [aws_internet_gateway.main]
+}
+
+# Elastic IP for NAT Gateway
+resource "aws_eip" "nat" {
+  domain = "vpc"
+  tags = {
+    Name = "${var.environment}-nat-eip"
+    Environment = var.environment
+  }
 }

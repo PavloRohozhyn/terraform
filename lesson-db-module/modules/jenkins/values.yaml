@@ -58,7 +58,7 @@ controller:
                 scm {
                   git {
                     remote {
-                      url('https://github.com/PavloRohozhyn/django-app-for-terraform.git')
+                      url('https://github.com/PavloRohozhyn/django-app-for-terraform-1.git')
                       credentials('github-token')
                     }
                     branches('*/main')
@@ -73,7 +73,7 @@ controller:
                             scm {
                               git {
                                 remote {
-                                  url("https://github.com/PavloRohozhyn/django-app-for-terraform.git")
+                                  url("https://github.com/PavloRohozhyn/django-app-for-terraform-1.git")
                                   credentials("github-token")
                                 }
                                 branches("*/main")

@@ -2,34 +2,18 @@
 
 # Опис завдання
 
-Ваша мета — реалізувати повний `CI/CD-процес` із використанням `Jenkins` + `Helm` + `Terraform` + `Argo CD`, який:
+### Реалізувати універсальний модуль `rds`, який:
 
-1. Автоматично збирає `Docker-образ` для `Django-застосунку`;
+1. Підіймає `Aurora Cluster` або звичайну `RDS` instance на основі значення `use_aurora`;
 
-2. Публікує образ в `Amazon ECR`;
+2. Автоматично створює:
+ - `DB Subnet Group`
+ - `Security Group`
+ - `Parameter Group` для обраного типу БД;
 
-3. Оновлює `Helm chart` у репозиторії з правильним тегом;
+3. Працює з мінімальними змінами змінних і підтримує багаторазове використання.
 
-4. Синхронізує застосунок у кластері через `Argo CD`, який підхоплює зміни з `Git`.
-
-Кроки виконання завдання
-
-1. `Jenkins` + `Helm` + `Terraform`
-
-- Встановіть `Jenkins` через `Helm`, автоматизувавши встановлення через `Terraform`.
-- Забезпечте роботу `Jenkins` через `Kubernetes Agent (Kaniko + Git)`.
-- Реалізуйте `pipeline` (через `Jenkinsfile`), який:
-- Збирає образ із `Dockerfile`;
-- Пушить його до `ECR`;
-- Оновлює тег у `values.yaml` іншого репозиторію;
-- Пушить зміни в `main`. 2. `Argo CD` + `Helm` + `Terraform`
-
-- Встановіть `Argo CD` через Helm із використанням `Terraform`.
-- Налаштуйте `Argo CD Application`, який стежить за оновленням `Helm-чарта`.
-- `Argo CD` має автоматично синхронізувати зміни у кластері після оновлення `Git`.
-
-## Структура проєкту
-
+#### Структура проєкту
 ```
 Progect/
 │
@@ -48,7 +32,7 @@ Progect/
 │   │   ├── vpc.tf           # Створення VPC, підмереж, Internet Gateway
 │   │   ├── routes.tf        # Налаштування маршрутизації
 │   │   ├── variables.tf     # Змінні для VPC
-│   │   └── outputs.tf
+│   │   └── outputs.tf  
 │   ├── ecr/                 # Модуль для ECR
 │   │   ├── ecr.tf           # Створення ECR репозиторію
 │   │   ├── variables.tf     # Змінні для ECR
@@ -60,13 +44,20 @@ Progect/
 │   │   ├── variables.tf     # Змінні для EKS
 │   │   └── outputs.tf       # Виведення інформації про кластер
 │   │
+│   ├── rds/                 # Модуль для RDS
+│   │   ├── rds.tf           # Створення RDS бази даних  
+│   │   ├── aurora.tf        # Створення aurora кластера бази даних  
+│   │   ├── shared.tf        # Спільні ресурси  
+│   │   ├── variables.tf     # Змінні (ресурси, креденшели, values)
+│   │   └── outputs.tf  
+│   │ 
 │   ├── jenkins/             # Модуль для Helm-установки Jenkins
 │   │   ├── jenkins.tf       # Helm release для Jenkins
 │   │   ├── variables.tf     # Змінні (ресурси, креденшели, values)
 │   │   ├── providers.tf     # Оголошення провайдерів
 │   │   ├── values.yaml      # Конфігурація jenkins
 │   │   └── outputs.tf       # Виводи (URL, пароль адміністратора)
-│   │
+│   │ 
 │   └── argo_cd/             # ✅ Новий модуль для Helm-установки Argo CD
 │       ├── jenkins.tf       # Helm release для Jenkins
 │       ├── variables.tf     # Змінні (версія чарта, namespace, repo URL тощо)
@@ -89,3 +80,15 @@ Progect/
 │       ├── Chart.yaml
 │       └── values.yaml     # ConfigMap зі змінними середовища
 ```
+
+### Функціонал модуля:
+
+`use_aurora = true` → створюється `Aurora Cluster + writer`;
+`use_aurora = false` → створюється одна `aws_db_instance`;
+
+В обох випадках:
+ - створюється `aws_db_subnet_group`;
+ - створюється `aws_security_group`;
+ - створюється `parameter group` з базовими параметрами (`max_connections`, `log_statement`, `work_mem`);
+
+Параметри `engine`, `engine_version`, `instance_class`, `multi_az` задаються через змінні.
