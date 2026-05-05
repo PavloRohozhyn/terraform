@@ -57,7 +57,7 @@ spec:
                                     git push origin final-project
                                 else
                                     echo "error: file \$FILE_PATH not found"
-                                    find . -maxdepth 3 -not -path '*/.*'
+                                    ls -R
                                     exit 1
                                 fi
                             """
