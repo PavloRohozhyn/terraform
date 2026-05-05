@@ -160,15 +160,58 @@ $ aws eks update-kubeconfig --name dev-dev-final-project-kuber
 
 ![terraform apply](./imgs/kuber-update.png)
 
+### Check Resourses
+
+```
+kubectl get all -n jenkins
+```
+![jenkins-get-all](./imgs/jenkins-get-all.png)
+
+```
+kubectl get all -n argocd
+```
+![argo-get-all](./imgs/argo-get-all.png)
+
+```
+kubectl get all -n monitoring
+```
+![moni-get-all](./imgs/moni-get-all.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### Jenkins
 ```
-kubectl get svc -n jenkins
+kubectl port-forward svc/jenkins 8080:80 -n jenkins
 ```
+
 ![jenkins-ip](./imgs/aws-jenkins-ip.png)
 
 ![jenkins](./imgs/aws-jenkins.png)
 
 ### Argo
+```
+kubectl port-forward svc/argocd-server 8081:443 -n argocd
+```
+![argo-ip](./imgs/aws-argo-ip.png)
+
+```
+# admin password:
+kubectl -n argocd get secret argocd-initial-admin-secret \
+  -o jsonpath="{.data.password}" | base64 -d
+```
+![argo-admin-pass](./imgs/aws-argo-admin-pass.png)
+
 
 ![argo](./imgs/aws-argo.png)
 
@@ -185,5 +228,5 @@ Monitoring runs inside the cluster (ClusterIP). To access it from a browser, run
 ```
 kubectl port-forward svc/prometheus-grafana 3000:80 -n monitoring
 ```
-![monitoring](./imgs/aws-database.png)
+![monitoring](./imgs/aws-mono-ip.png)
 

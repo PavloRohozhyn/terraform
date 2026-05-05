@@ -20,7 +20,7 @@ spec:
     }
 
    environment {
-        ECR_REPO = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+        ECR_REPO = "211125349493.dkr.ecr.us-east-1.amazonaws.com/dev-final-project"
         GITOPS_REPO = "github.com/PavloRohozhyn/terraform.git"
         IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
@@ -29,10 +29,9 @@ spec:
         stage('Build & Push to ECR') {
             steps {
                 container('kaniko') {
-                    // Kaniko dont need docker login, his use IRSA (IAM role)
                     sh """
-                    /kaniko/executor --context `pwd` \
-                        --dockerfile Dockerfile \
+                    /kaniko/executor --context ${workspace}/django \
+                        --dockerfile ${workspace}/django/Dockerfile \
                         --destination ${ECR_REPO}:${IMAGE_TAG} \
                         --destination ${ECR_REPO}:latest
                     """
@@ -49,7 +48,7 @@ spec:
                                 git config --global user.name "Jenkins CI"
                                 git clone -b final-project https://\$GH_TOKEN@github.com/PavloRohozhyn/terraform.git temp_infra
                                 cd temp_infra
-                                FILE_PATH="final-project/charts/django-app/values.yaml"
+                                FILE_PATH="charts/django-app/values.yaml"
                                 if [ -f "\$FILE_PATH" ]; then
                                     echo "Update tag to : ${IMAGE_TAG}"
                                     sed -i "s/tag: .*/tag: \\"${IMAGE_TAG}\\"/" "\$FILE_PATH"
