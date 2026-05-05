@@ -140,13 +140,13 @@ $ aws s3api create-bucket --bucket rohozhyn-final-project --region us-east-1
 then
 
 ```
-terraform init
+$ terraform init
 ```
 
 ![terraform init](./imgs/terraform-init.png)
 
 ```
-terraform apply
+$ terraform apply
 
 ```
 
@@ -163,36 +163,23 @@ $ aws eks update-kubeconfig --name dev-dev-final-project-kuber
 ### Check Resourses
 
 ```
-kubectl get all -n jenkins
+$ kubectl get all -n jenkins
 ```
 ![jenkins-get-all](./imgs/jenkins-get-all.png)
 
 ```
-kubectl get all -n argocd
+$ kubectl get all -n argocd
 ```
 ![argo-get-all](./imgs/argo-get-all.png)
 
 ```
-kubectl get all -n monitoring
+$ kubectl get all -n monitoring
 ```
 ![moni-get-all](./imgs/moni-get-all.png)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### Jenkins
 ```
-kubectl port-forward svc/jenkins 8080:80 -n jenkins
+$ kubectl port-forward svc/jenkins 8080:80 -n jenkins
 ```
 
 ![jenkins-ip](./imgs/aws-jenkins-ip.png)
@@ -201,13 +188,13 @@ kubectl port-forward svc/jenkins 8080:80 -n jenkins
 
 ### Argo
 ```
-kubectl port-forward svc/argocd-server 8081:443 -n argocd
+$ kubectl port-forward svc/argocd-server 8081:443 -n argocd
 ```
 ![argo-ip](./imgs/aws-argo-ip.png)
 
 ```
 # admin password:
-kubectl -n argocd get secret argocd-initial-admin-secret \
+$ kubectl -n argocd get secret argocd-initial-admin-secret \
   -o jsonpath="{.data.password}" | base64 -d
 ```
 ![argo-admin-pass](./imgs/aws-argo-admin-pass.png)
@@ -216,6 +203,8 @@ kubectl -n argocd get secret argocd-initial-admin-secret \
 ![argo](./imgs/aws-argo.png)
 
 ### Django  
+
+![django-app-url](./imgs/aws-django-url.png)
 
 ![django-app](./imgs/aws-django.png)
 
@@ -226,7 +215,17 @@ kubectl -n argocd get secret argocd-initial-admin-secret \
 ### Monitoring (Grafana and Prometheus)
 Monitoring runs inside the cluster (ClusterIP). To access it from a browser, run the following commands (the gateway will be active as long as the terminal is open):
 ```
-kubectl port-forward svc/prometheus-grafana 3000:80 -n monitoring
+$ kubectl port-forward svc/prometheus-grafana 3000:80 -n monitoring
 ```
 ![monitoring](./imgs/aws-mono-ip.png)
 
+![monitoring-1](./imgs/aws-monitoring-1.png)
+
+![monitoring-2](./imgs/aws-monitoring-1.png)
+
+### Destroy
+
+```
+$ terraform destroy
+```
+![terraform destroy](./imgs/terraform-destroy.png)
