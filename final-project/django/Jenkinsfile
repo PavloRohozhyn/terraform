@@ -30,8 +30,8 @@ spec:
             steps {
                 container('kaniko') {
                     sh """
-                    /kaniko/executor --context ${workspace}/django \
-                        --dockerfile ${workspace}/django/Dockerfile \
+                    /kaniko/executor --context `pwd`/django \
+                        --dockerfile `pwd`/django/Dockerfile \
                         --destination ${ECR_REPO}:${IMAGE_TAG} \
                         --destination ${ECR_REPO}:latest
                     """
