@@ -6,4 +6,4 @@
 - [lesson-7](./lesson-7/readme.md) (done)
 - [lesson-8-9](./lesson-8-9/readme.md) (done)
 - [lesson-db-module](./lesson-db-module/README.md) (done)
-- [final-project](./final-project/README.md) (in progress)
+- [final-project](./final-project/README.md) (done)

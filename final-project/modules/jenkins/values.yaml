@@ -79,7 +79,7 @@ controller:
                                 branches("*/final-project")
                               }
                             }
-                            scriptPath("django/Jenkinsfile")    
+                            scriptPath("final-project/django/Jenkinsfile")    
                           }
                         }
                       }

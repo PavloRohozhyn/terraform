@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: "211125349493.dkr.ecr.us-east-1.amazonaws.com/dev-final-project"
-  tag: "latest"
+  tag: "8"
   pullPolicy: IfNotPresent
 
 service:
